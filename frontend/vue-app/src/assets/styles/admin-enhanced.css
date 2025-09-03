@@ -1,0 +1,41 @@
+/* Admin enhanced shared styles (no dialog title background) */
+
+/* Primary button gradient and subtle hover */
+.el-button--primary {
+  background-image: linear-gradient(135deg, #409eff, #34d399);
+  border: none;
+}
+.el-button--primary:hover,
+.el-button--primary:focus {
+  filter: brightness(1.05);
+}
+
+/* Focus highlight for inputs and textareas */
+.el-input__wrapper.is-focus,
+.is-focus .el-textarea__inner {
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2) inset;
+}
+
+/* Softer tag colors for success and danger */
+.el-tag--success {
+  background-color: #e8fff5;
+  color: #0da36f;
+  border-color: #c6f6e6;
+}
+.el-tag--danger {
+  background-color: #ffecec;
+  color: #d03050;
+  border-color: #ffd0d5;
+}
+
+/* Form label color tweak */
+.el-form-item__label {
+  color: #3c4a5b;
+}
+
+/* Subtle accent line for table cards */
+.table-card .el-card__body {
+  border-top: 3px solid #4e9cff22;
+}
+
+
