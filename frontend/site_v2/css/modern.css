@@ -1,0 +1,283 @@
+/* 现代化UI样式 - 美化AI知识库界面 */
+
+/* 全局样式优化 */
+body {
+    background-color: #f8fafc;
+    color: #334155;
+    transition: background-color 0.3s ease;
+}
+
+/* 智能文档平台视觉基调（仅CSS增强，不改HTML文本） */
+:root {
+    /* Southeast University palette: green + yellow */
+    --brand-green: #006633;           /* 主绿 */
+    --brand-green-700: #005026;       /* 深绿 */
+    --brand-green-300: #4fa06f;       /* 浅绿 */
+    --brand-yellow: #ffcc00;          /* 主黄 */
+    --brand-yellow-200: #ffe680;      /* 浅黄 */
+
+    /* semantic aliases */
+    --brand-primary: var(--brand-green);
+    --brand-primary-600: var(--brand-green-700);
+    --brand-accent: var(--brand-yellow);
+    --brand-accent-200: var(--brand-yellow-200);
+    --brand-surface: rgba(255, 255, 255, 0.88);
+    --brand-border: rgba(226, 232, 240, 0.85);
+}
+
+/* 导航栏美化 */
+nav {
+    backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, var(--brand-surface) 0%, rgba(255,255,255,0.78) 100%);
+    border-bottom: 1px solid var(--brand-border);
+    box-shadow: 0 6px 20px rgba(0, 102, 51, 0.10), 0 1px 3px rgba(15, 23, 42, 0.05);
+    transition: all 0.3s ease;
+}
+
+nav button {
+    transform: scale(1);
+    transition: all 0.2s ease;
+}
+
+nav button:hover {
+    transform: scale(1.05);
+}
+
+/* 侧边栏美化 */
+#sidebar {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border-right: 1px solid var(--brand-border);
+    box-shadow: 1px 0 18px rgba(0, 102, 51, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 聊天列表项美化 */
+.chat-item {
+    border-left: 3px solid transparent;
+    margin-bottom: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.chat-item:hover {
+    transform: translateX(3px);
+    background-color: rgba(255, 204, 0, 0.10);
+}
+
+.chat-item.selected {
+    background-color: rgba(14, 165, 233, 0.08);
+    border-left-color: #0ea5e9;
+}
+
+/* 聊天区域美化 */
+#chatArea {
+    scroll-behavior: smooth;
+    padding: 1.5rem;
+    background: radial-gradient(1200px 600px at 100% -20%, rgba(0,102,51,0.08), transparent 60%),
+                radial-gradient(1200px 700px at -10% 110%, rgba(255,204,0,0.10), transparent 60%);
+}
+
+/* 欢迎消息卡片美化 */
+#welcomeMessage .bg-white {
+    background: var(--brand-surface);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--brand-border);
+    box-shadow: 0 18px 40px -12px rgba(0, 102, 51, 0.18), 0 10px 25px -8px rgba(15, 23, 42, 0.08);
+    transition: all 0.3s ease;
+}
+
+#welcomeMessage .bg-white:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* 消息气泡美化 */
+.message {
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    margin-bottom: 1.5rem;
+    animation: messageAppear 0.3s ease-out;
+}
+
+@keyframes messageAppear {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 用户消息 */
+.user-message {
+    background-color: #e0f2fe;
+    border-top-right-radius: 0.25rem;
+    margin-left: auto;
+    border: 1px solid rgba(14, 165, 233, 0.2);
+}
+
+/* AI消息 */
+.ai-message {
+    background-color: #ffffff;
+    border-top-left-radius: 0.25rem;
+    margin-right: auto;
+    border: 1px solid var(--brand-border);
+    box-shadow: 0 6px 18px rgba(0, 102, 51, 0.10), 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+
+/* 输入区域美化 */
+.input-container {
+    background-color: var(--brand-surface);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--brand-border);
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px -10px rgba(0, 102, 51, 0.18), 0 6px 14px -6px rgba(15, 23, 42, 0.12);
+    transition: all 0.3s ease;
+}
+
+.input-container:focus-within {
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+    border-color: rgba(14, 165, 233, 0.3);
+}
+
+#messageInput {
+    border: none;
+    background-color: transparent;
+    resize: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+#messageInput:focus {
+    outline: none;
+}
+
+/* 发送按钮美化 */
+#submitBtn {
+    transition: all 0.2s ease;
+    background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-primary) 100%) !important;
+    box-shadow: 0 10px 20px -10px rgba(0, 102, 51, 0.55);
+}
+
+#submitBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 24px -12px rgba(0, 102, 51, 0.65);
+}
+
+/* 下拉菜单美化 */
+#uploadMenu {
+    animation: menuAppear 0.2s ease-out;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(226, 232, 240, 0.7);
+}
+
+@keyframes menuAppear {
+    from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* 选择框美化 */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 1.25em 1.25em;
+    transition: all 0.2s ease;
+}
+
+select:focus {
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
+/* 加载动画 */
+.loading-dots {
+    display: inline-flex;
+    align-items: center;
+}
+
+.loading-dots span {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    margin: 0 0.15rem;
+    animation: dotPulse 1.5s infinite ease-in-out;
+    opacity: 0.6;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+    0%, 100% { transform: scale(0.7); opacity: 0.5; }
+    50% { transform: scale(1); opacity: 1; }
+}
+
+/* 响应式设计优化 */
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        z-index: 50;
+        transform: translateX(-100%);
+    }
+    
+    #sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    .overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(203, 213, 225, 0.9), rgba(148, 163, 184, 0.9));
+    border-radius: 8px;
+}
+
+/* ---- Tailwind primary 类名的主题映射（绿色为主，黄色作浅底） ---- */
+.text-primary-600, .text-primary-700, .text-primary-500 { color: var(--brand-green) !important; }
+.bg-primary-600 { background-color: var(--brand-green) !important; }
+.hover\:bg-primary-700:hover { background-color: var(--brand-green-700) !important; }
+.border-primary-500, .border-primary-600, .border-primary-300 { border-color: var(--brand-green) !important; }
+.text-primary-600\! { color: var(--brand-green) !important; }
+.bg-primary-50 { background-color: rgba(255, 204, 0, 0.12) !important; }
+.hover\:bg-primary-50:hover { background-color: rgba(255, 204, 0, 0.18) !important; }
+.text-primary-700 { color: var(--brand-green-700) !important; }
+
+/* 选中态的卡片/列表强调：黄底+绿边 */
+.chat-item.selected { background-color: rgba(255, 204, 0, 0.18) !important; border-left-color: var(--brand-green) !important; }
+
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.8);
+}

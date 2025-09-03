@@ -1,0 +1,160 @@
+/* 管理后台绿色主题（东南大学配色：绿 + 黄） */
+
+:root {
+    --brand-green: #006633;        /* 主绿 */
+    --brand-green-700: #005026;    /* 深绿 */
+    --brand-yellow: #ffcc00;       /* 辅助黄 */
+
+    /* Bootstrap 变量覆盖 */
+    --bs-primary: var(--brand-green);
+    --bs-primary-rgb: 0, 102, 51;
+}
+
+/* 顶部导航条 */
+.navbar.bg-dark, .navbar.navbar-dark {
+    background-color: var(--brand-green) !important;
+}
+
+.navbar .navbar-brand {
+    background-color: rgba(0,0,0,0.12) !important;
+}
+
+/* 侧边栏与激活项 */
+#sidebarMenu {
+    border-right: 1px solid rgba(0,0,0,0.06);
+}
+
+.sidebar .nav-link, #sidebarMenu .nav-link {
+    color: var(--brand-green) !important;
+}
+
+.sidebar .nav-link i, #sidebarMenu .nav-link i {
+    color: var(--brand-green) !important;
+}
+
+.nav-link.active {
+    background-color: var(--brand-green) !important;
+    color: #fff !important;
+}
+
+/* 选中态（非 hover）强制白字，兼容 aria-current 与父级 .active 写法 */
+#sidebarMenu .nav-link.active,
+#sidebarMenu .nav-link[aria-current="page"],
+#sidebarMenu .active > .nav-link,
+.sidebar .nav-link.active,
+.sidebar .nav-link[aria-current="page"],
+.sidebar .active > .nav-link {
+    background-color: var(--brand-green) !important;
+    color: #ffffff !important;
+}
+
+#sidebarMenu .nav-link.active *,
+#sidebarMenu .nav-link[aria-current="page"] *,
+#sidebarMenu .active > .nav-link *,
+.sidebar .nav-link.active *,
+.sidebar .nav-link[aria-current="page"] *,
+.sidebar .active > .nav-link * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* 修正链接状态 */
+#sidebarMenu .nav-link.active:visited,
+.sidebar .nav-link.active:visited {
+    color: #ffffff !important;
+}
+
+.nav-link:hover {
+    background-color: var(--brand-green) !important; /* 绿底悬停，提升对比度 */
+    color: #ffffff !important;
+}
+
+.nav-link:hover i {
+    color: #ffffff !important;
+}
+
+/* 提升优先级，确保侧边栏悬停为白字 */
+#sidebarMenu .nav-link:hover,
+#sidebarMenu .nav-link:focus,
+.sidebar .nav-link:hover,
+.sidebar .nav-link:focus {
+    background-color: var(--brand-green) !important;
+    color: #ffffff !important;
+}
+
+#sidebarMenu .nav-link:hover i,
+#sidebarMenu .nav-link:focus i,
+#sidebarMenu .nav-link:hover .fa,
+#sidebarMenu .nav-link:focus .fa,
+.sidebar .nav-link:hover i,
+.sidebar .nav-link:focus i,
+.sidebar .nav-link:hover .fa,
+.sidebar .nav-link:focus .fa {
+    color: #ffffff !important;
+}
+
+/* 统一子元素（span/svg/icon）在悬停与激活时为白色，避免局部覆盖导致仍为绿字 */
+#sidebarMenu .nav-link:hover *,
+#sidebarMenu .nav-link:focus *,
+.sidebar .nav-link:hover *,
+.sidebar .nav-link:focus * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+.nav-link.active *,
+#sidebarMenu .nav-link.active *,
+.sidebar .nav-link.active * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+/* 主按钮与描边按钮 */
+.btn-primary {
+    background-color: var(--brand-green) !important;
+    border-color: var(--brand-green) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--brand-green-700) !important;
+    border-color: var(--brand-green-700) !important;
+}
+
+.btn-outline-primary {
+    color: var(--brand-green) !important;
+    border-color: var(--brand-green) !important;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--brand-green) !important;
+    color: #fff !important;
+}
+
+/* 进度/强调色可用黄 */
+.badge.bg-warning, .text-warning {
+    background-color: var(--brand-yellow) !important;
+    color: #2d2d2d !important;
+}
+
+/* 分页激活颜色 */
+.page-item.active .page-link {
+    background-color: var(--brand-green) !important;
+    border-color: var(--brand-green) !important;
+}
+
+/* 表格顶部边与标题强调 */
+.border-bottom {
+    border-bottom-color: rgba(0, 102, 51, 0.25) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--brand-green) !important;
+    box-shadow: 0 0 0 .2rem rgba(0, 102, 51, 0.15) !important;
+}
+
+/* 自定义徽标点/高亮 */
+.text-primary { color: var(--brand-green) !important; }
+.border-primary { border-color: var(--brand-green) !important; }
+.bg-primary { background-color: var(--brand-green) !important; }
+
+

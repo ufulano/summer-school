@@ -1,0 +1,16 @@
+{
+  "name": "site_v2",
+  "version": "1.0.0",
+  "description": "https://cdn.jsdelivr.net 如果加载失败，可以把对应文件，配置成 css、js 下的文件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server -p 5500 -c-1 . --no-dotfiles"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
