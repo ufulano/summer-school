@@ -66,13 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadRagOptions = () => {
         const ragSelect = document.getElementById('ragSelect');
 
-        fetch(ApiConfig.getApiUrl('/ai/admin/rag/queryAllValidRagOrder'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => response.json())
+        ApiUtils.getRagList()
             .then(data => {
                 if (data) {
                     // 清空现有选项（保留第一个默认选项）
@@ -94,78 +88,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 获取AI代理列表
     function fetchAiAgents() {
-        // 发送请求获取AI代理列表
-        fetch(ApiConfig.getApiUrl('/ai/admin/agent/queryAllAgentConfigListByChannel'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'channel=chat_stream'
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('网络响应不正常');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const aiAgentSelect = document.getElementById('aiAgent');
-            // 清空现有选项
-            aiAgentSelect.innerHTML = '';
+        ApiUtils.getAgentList('chat_stream')
+            .then(data => {
+                const aiAgentSelect = document.getElementById('aiAgent');
+                // 清空现有选项
+                aiAgentSelect.innerHTML = '';
 
-            // 添加从服务器获取的选项
-            if (data && data.length > 0) {
-                data.forEach((agent, index) => {
-                    const option = document.createElement('option');
-                    option.value = agent.id;
-                    option.textContent = agent.agentName;
-                    // 如果是第一个选项，设置为选中状态
-                    if (index === 0) {
-                        option.selected = true;
-                    }
-                    aiAgentSelect.appendChild(option);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('获取AI代理列表失败:', error);
-        });
+                // 添加从服务器获取的选项
+                if (data && data.length > 0) {
+                    data.forEach((agent, index) => {
+                        const option = document.createElement('option');
+                        option.value = agent.id;
+                        option.textContent = agent.agentName;
+                        // 如果是第一个选项，设置为选中状态
+                        if (index === 0) {
+                            option.selected = true;
+                        }
+                        aiAgentSelect.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('获取AI代理列表失败:', error);
+            });
     }
 
     // 获取提示词列表
     function fetchPromptTemplates() {
-        fetch(ApiConfig.getApiUrl('/ai/admin/client/system/prompt/queryAllSystemPromptConfig'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('网络响应不正常');
-            }
-            return response.json();
-        })
-        .then(data => {
-            const promptSelect = document.getElementById('promptSelect');
-            // 清空现有选项（保留第一个默认选项）
-            while (promptSelect.options.length > 1) {
-                promptSelect.remove(1);
-            }
+        ApiUtils.getPromptList()
+            .then(data => {
+                const promptSelect = document.getElementById('promptSelect');
+                // 清空现有选项（保留第一个默认选项）
+                while (promptSelect.options.length > 1) {
+                    promptSelect.remove(1);
+                }
 
-            // 添加从服务器获取的选项
-            if (data && data.length > 0) {
-                data.forEach(prompt => {
-                    const option = document.createElement('option');
-                    option.value = prompt.promptContent;
-                    option.textContent = prompt.promptName;
-                    promptSelect.appendChild(option);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('获取提示词列表失败:', error);
-        });
+                // 添加从服务器获取的选项
+                if (data && data.length > 0) {
+                    data.forEach(prompt => {
+                        const option = document.createElement('option');
+                        option.value = prompt.promptContent;
+                        option.textContent = prompt.promptName;
+                        promptSelect.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('获取提示词列表失败:', error);
+            });
     }
 
     // 初始化加载
@@ -413,54 +383,9 @@ function startEventStream(message) {
     const aiAgentId = aiAgentSelect.value;
     const aiModelModel = aiAgentSelect.options[aiAgentSelect.selectedIndex].getAttribute('model');
 
-    let url = `${ApiConfig.BASE_URL}${ApiConfig.API_PREFIX}/ai/agent/chat_stream?aiAgentId=${aiAgentId}&ragId=${ragIdParam}&message=${encodeURIComponent(message)}`;
-
-    currentEventSource = new EventSource(url);
-    let accumulatedContent = '';
-    let tempRow = null; // 行容器
-    let tempBubble = null; // 冒泡容器
-    let spinnerEl = null; // 加载图标
-    let firstChunkReceived = false;
-    const CONNECT_TIMEOUT_MS = 10000; // 10s 未收到任何数据则判定失败
-
-    // 先呈现“左侧气泡-加载中”
-    (function createLoadingBubble() {
-        tempRow = document.createElement('div');
-        tempRow.className = 'max-w-4xl mx-auto mb-4 flex justify-start';
-        tempBubble = document.createElement('div');
-        tempBubble.className = 'px-4 py-3 rounded-2xl rounded-tl-md bg-gray-100 border border-gray-200 shadow-sm relative flex items-center gap-2';
-        spinnerEl = document.createElement('div');
-        spinnerEl.innerHTML = '<svg class="w-5 h-5 animate-spin text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
-        const textEl = document.createElement('span');
-        textEl.className = 'text-gray-600';
-        textEl.textContent = '思考中…';
-        tempBubble.appendChild(spinnerEl);
-        tempBubble.appendChild(textEl);
-        tempRow.appendChild(tempBubble);
-        chatArea.appendChild(tempRow);
-        chatArea.scrollTop = chatArea.scrollHeight;
-    })();
-
-    // 连接超时兜底
-    const timeoutId = setTimeout(() => {
-        if (!firstChunkReceived) {
-            try { currentEventSource && currentEventSource.close(); } catch (e) {}
-            loadingSpinner.classList.add('hidden');
-            submitBtn.disabled = false;
-            if (tempBubble) {
-                if (spinnerEl) spinnerEl.remove();
-                tempBubble.classList.add('markdown-body');
-                tempBubble.innerHTML = DOMPurify.sanitize(marked.parse('抱歉，暂时没有收到服务器响应，请稍后再试。'));
-            } else {
-                showSystemMessage('连接超时：未收到服务端响应，请检查后端服务或网络。');
-            }
-        }
-    }, CONNECT_TIMEOUT_MS);
-
-    currentEventSource.onmessage = function(event) {
-        try {
-            const data = JSON.parse(event.data);
-
+    currentEventSource = ApiUtils.startChatStream(aiAgentId, ragIdParam, message, 
+        (data) => {
+            // 处理消息
             if (data.result) {
                 const output = data.result.output;
                 if (output.text) {
@@ -514,31 +439,69 @@ function startEventStream(message) {
                 clearTimeout(timeoutId);
                 showSystemMessage('服务端返回为空或格式异常。');
             }
-        } catch (e) {
-            console.error('Error parsing event data:', e);
-            // 发生错误时也隐藏加载指示器
+        },
+        (error) => {
+            console.error('EventSource error:', error);
+            currentEventSource.close();
+            // 发生错误时隐藏加载指示器
             loadingSpinner.classList.add('hidden');
             submitBtn.disabled = false;
             clearTimeout(timeoutId);
-            showSystemMessage('解析响应失败：返回数据格式错误。');
+            if (tempBubble) {
+                if (spinnerEl) spinnerEl.remove();
+                tempBubble.classList.add('markdown-body');
+                tempBubble.innerHTML = DOMPurify.sanitize(marked.parse('抱歉，连接服务器失败，请稍后重试。'));
+            } else {
+                showSystemMessage('请求失败：无法连接到服务端，请稍后重试。');
+            }
+        },
+        () => {
+            // 完成处理
+            console.log('聊天流完成');
         }
-    };
+    );
+    let accumulatedContent = '';
+    let tempRow = null; // 行容器
+    let tempBubble = null; // 冒泡容器
+    let spinnerEl = null; // 加载图标
+    let firstChunkReceived = false;
+    const CONNECT_TIMEOUT_MS = 10000; // 10s 未收到任何数据则判定失败
 
-    currentEventSource.onerror = function(error) {
-        console.error('EventSource error:', error);
-        currentEventSource.close();
-        // 发生错误时隐藏加载指示器
-        loadingSpinner.classList.add('hidden');
-        submitBtn.disabled = false;
-        clearTimeout(timeoutId);
-        if (tempBubble) {
-            if (spinnerEl) spinnerEl.remove();
-            tempBubble.classList.add('markdown-body');
-            tempBubble.innerHTML = DOMPurify.sanitize(marked.parse('抱歉，连接服务器失败，请稍后重试。'));
-        } else {
-            showSystemMessage('请求失败：无法连接到服务端，请稍后重试。');
+    // 先呈现“左侧气泡-加载中”
+    (function createLoadingBubble() {
+        tempRow = document.createElement('div');
+        tempRow.className = 'max-w-4xl mx-auto mb-4 flex justify-start';
+        tempBubble = document.createElement('div');
+        tempBubble.className = 'px-4 py-3 rounded-2xl rounded-tl-md bg-gray-100 border border-gray-200 shadow-sm relative flex items-center gap-2';
+        spinnerEl = document.createElement('div');
+        spinnerEl.innerHTML = '<svg class="w-5 h-5 animate-spin text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>';
+        const textEl = document.createElement('span');
+        textEl.className = 'text-gray-600';
+        textEl.textContent = '思考中…';
+        tempBubble.appendChild(spinnerEl);
+        tempBubble.appendChild(textEl);
+        tempRow.appendChild(tempBubble);
+        chatArea.appendChild(tempRow);
+        chatArea.scrollTop = chatArea.scrollHeight;
+    })();
+
+    // 连接超时兜底
+    const timeoutId = setTimeout(() => {
+        if (!firstChunkReceived) {
+            try { currentEventSource && currentEventSource.close(); } catch (e) {}
+            loadingSpinner.classList.add('hidden');
+            submitBtn.disabled = false;
+            if (tempBubble) {
+                if (spinnerEl) spinnerEl.remove();
+                tempBubble.classList.add('markdown-body');
+                tempBubble.innerHTML = DOMPurify.sanitize(marked.parse('抱歉，暂时没有收到服务器响应，请稍后再试。'));
+            } else {
+                showSystemMessage('连接超时：未收到服务端响应，请检查后端服务或网络。');
+            }
         }
-    };
+    }, CONNECT_TIMEOUT_MS);
+
+
 }
 
 submitBtn.addEventListener('click', () => {

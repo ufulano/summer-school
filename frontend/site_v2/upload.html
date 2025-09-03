@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入配置文件 -->
     <script src="js/config.js"></script>
+    <script src="js/port-config.js"></script>
+    <script src="js/api-client.js"></script>
     <style>
         /* 加载动画 */
         .loader {
@@ -137,21 +139,16 @@
        formData.append('tag', document.getElementById('tag').value);
        files.forEach(file => formData.append('files', file));
 
-       // 使用配置文件中的API URL
-       axios.post(ApiConfig.getApiUrl('/ai/agent/file/upload'), formData)
-         .then(response => {
-           if (response.data.code === '0000') {
-             // 成功提示并关闭窗口
-             setTimeout(() => {
-               alert('上传成功，窗口即将关闭');
-               window.close();
-             }, 500);
-           } else {
-             throw new Error(response.data.info || '上传失败');
-           }
+       // 使用新的API客户端
+       ApiUtils.uploadFile(formData)
+         .then(() => {
+           // 成功提示并关闭窗口
+           setTimeout(() => {
+             window.close();
+           }, 1000);
          })
          .catch(error => {
-           alert(error.message);
+           console.error('上传失败:', error);
          })
          .finally(() => {
            // 隐藏加载状态

@@ -135,6 +135,8 @@
     </div>
 </div>
 <script src="js/config.js"></script>
+<script src="js/port-config.js"></script>
+<script src="js/api-client.js"></script>
 <script>
     // 添加表单输入样式
     document.querySelectorAll('.form-input-focus').forEach(input => {
@@ -209,17 +211,10 @@
         loadingOverlay.style.display = 'flex';
         statusElement.textContent = '';
 
-        fetch(ApiConfig.getApiUrl('/rag/analyze_git_repository'), {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `repoUrl=${encodeURIComponent(repoUrl)}&userName=${encodeURIComponent(userName)}&token=${encodeURIComponent(token)}`
-        })
-        .then(response => response.json())
-        .then(data => {
-            loadingOverlay.style.display = 'none';
-            if (data.code === '0000') {
+        // 使用新的API客户端
+        ApiUtils.analyzeGitRepository(repoUrl, userName, token)
+            .then(() => {
+                loadingOverlay.style.display = 'none';
                 statusElement.textContent = '解析成功';
                 statusElement.classList.add('text-green-600');
                 
@@ -245,19 +240,14 @@
                         window.close();
                     }, 1500);
                 }, 500);
-            } else {
-                statusElement.textContent = data.info || '解析失败';
+            })
+            .catch(error => {
+                loadingOverlay.style.display = 'none';
+                statusElement.textContent = '解析仓库时出错，请检查网络连接';
                 statusElement.classList.remove('text-primary-600');
                 statusElement.classList.add('text-red-500');
-            }
-        })
-        .catch(error => {
-            loadingOverlay.style.display = 'none';
-            statusElement.textContent = '解析仓库时出错，请检查网络连接';
-            statusElement.classList.remove('text-primary-600');
-            statusElement.classList.add('text-red-500');
-            console.error('Error:', error);
-        });
+                console.error('Error:', error);
+            });
     });
 </script>
 
