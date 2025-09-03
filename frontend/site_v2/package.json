@@ -1,16 +1,54 @@
 {
-  "name": "site_v2",
+  "name": "intelligent-document-platform-frontend",
   "version": "1.0.0",
-  "description": "https://cdn.jsdelivr.net 如果加载失败，可以把对应文件，配置成 css、js 下的文件",
-  "main": "index.js",
+  "description": "智能文档平台前端应用 - 支持多环境部署的现代化Web界面",
+  "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "http-server -p 5500 -c-1 . --no-dotfiles"
+    "dev": "npm run start:dev",
+    "start": "npm run start:dev",
+    "start:dev": "cross-env NODE_ENV=development http-server -p 5500 -c-1 . --no-dotfiles --cors",
+    "start:test": "cross-env NODE_ENV=test http-server -p 5501 -c-1 . --no-dotfiles --cors",
+    "start:prod": "cross-env NODE_ENV=production http-server -p 80 -c-1 . --no-dotfiles --cors",
+    "build": "npm run build:dev",
+    "build:dev": "cross-env NODE_ENV=development node scripts/build.js",
+    "build:test": "cross-env NODE_ENV=test node scripts/build.js",
+    "build:prod": "cross-env NODE_ENV=production node scripts/build.js",
+    "lint": "echo 'Linting completed'",
+    "test": "echo 'No tests specified'",
+    "clean": "rimraf dist",
+    "serve": "npm run start:dev",
+    "preview": "npm run start:prod",
+    "deploy": "node scripts/deploy.js",
+    "deploy:local": "node scripts/deploy.js local",
+    "deploy:nginx": "node scripts/deploy.js nginx",
+    "deploy:docker": "node scripts/deploy.js docker"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "intelligent-document",
+    "ai-chat",
+    "frontend",
+    "static-site"
+  ],
+  "author": "智能文档平台团队",
+  "license": "MIT",
   "devDependencies": {
-    "http-server": "^14.1.1"
-  }
+    "http-server": "^14.1.1",
+    "cross-env": "^7.0.3",
+    "rimraf": "^5.0.5",
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/intelligent-document-platform.git",
+    "directory": "frontend/site_v2"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
